@@ -1,6 +1,6 @@
 <template>
   <div class="cube-container">
-    <canvas width="400" height="400" id="three" />
+    <canvas id="three" />
   </div>
 </template>
 
@@ -31,6 +31,8 @@ function initScene() {
     antialias: true, // 开启抗锯齿
   }); // 创建渲染器
 
+  // renderer.setPixelRatio(window.devicePixelRatio);
+
   // renderer.setAnimationLoop(animate);
 
   const boxWidth = 1;
@@ -53,6 +55,17 @@ function initScene() {
 
     // cube.rotation.x = time;
     // cube.rotation.y = time;
+
+    // const canvas = renderer.domElement;
+    // camera.aspect = canvas.clientWidth / canvas.clientHeight;
+    // camera.updateProjectionMatrix();
+
+    if (resizeRendererToDisplaySize(renderer)) {
+      const canvas = renderer.domElement;
+      console.log(canvas)
+      camera.aspect = canvas.clientWidth / canvas.clientHeight;
+      camera.updateProjectionMatrix();
+    }
 
     cubes.forEach((cube, ndx) => {
       const speed = 1 + ndx * 0.1;
@@ -82,6 +95,18 @@ function initScene() {
   ];
 }
 
+function resizeRendererToDisplaySize(renderer) {
+  const canvas = renderer.domElement;
+  const pixelRatio = window.devicePixelRatio;
+  const width = Math.floor(canvas.clientWidth * pixelRatio);
+  const height = Math.floor(canvas.clientHeight * pixelRatio);
+  const needResize = canvas.width !== width || canvas.height !== height;
+  if (needResize) {
+    renderer.setSize(width, height, false);
+  }
+  return needResize;
+}
+
 function makeInstance(geometry, color, x) {
   const material = new THREE.MeshPhongMaterial({ color });
 
@@ -104,3 +129,15 @@ onMounted(() => {
   initScene();
 });
 </script>
+
+<style scoped>
+.cube-container {
+  width: 100%;
+  height: 100%;
+}
+
+#three {
+  width: 100%;
+  height: 100%;
+}
+</style>
